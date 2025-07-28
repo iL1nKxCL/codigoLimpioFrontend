@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Versión A - Proyecto Frontend</title>
+  <style>
+    .container { padding: 20px; font-family: Arial; }
+    .card { border: 1px solid #ccc; padding: 10px; margin: 10px; }
+    .btn { background-color: blue; color: white; padding: 5px 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Aplicación Desordenada</h1>
+    <div id="productos"></div>
+    <input id="inputProducto" placeholder="Nombre del producto">
+    <button class="btn" onclick="agregarProducto()">Agregar</button>
+  </div>
+  <script>
+    const STORAGE_KEY = "productos_versionA";
+    let productos = JSON.parse(localStorage.getItem(STORAGE_KEY)) || ['Zapatos', 'Polera', 'Pantalones'];
+
+    function guardar() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(productos));
+    }
+
+    function mostrar() {
+      const div = document.getElementById("productos");
+      div.innerHTML = "";
+      productos.forEach((prod, i) => {
+        div.innerHTML += "<div class='card'>" + prod +
+          "<button onclick='eliminarProducto(" + i + ")'>Eliminar</button></div>";
+      });
+    }
+
+    function agregarProducto() {
+      const valor = document.getElementById("inputProducto").value;
+      if (valor !== "") {
+        productos.push(valor);
+        guardar();
+        mostrar();
+      }
+    }
+
+    function eliminarProducto(index) {
+      productos.splice(index, 1);
+      guardar();
+      mostrar();
+    }
+
+    mostrar();
+  </script>
+</body>
+</html>
