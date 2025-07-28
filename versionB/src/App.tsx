@@ -6,7 +6,7 @@ const { Header, Content } = Layout;
 
 const App: React.FC = () => (
   <Layout style={{ minHeight: "100vh" }}>
-    <Header style={{ color: "#fff", fontSize: "20px" }}>Gestión de Productos</Header>
+    <Header style={{ color: "#fff", fontSize: "20px" }}>Version B Codigo Limpio FrontEnd</Header>
     <Content style={{ padding: "20px" }}>
       <ProductList />
     </Content>

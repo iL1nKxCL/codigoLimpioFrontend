@@ -1,0 +1,108 @@
+.product-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+  background: linear-gradient(135deg, #f0f2f5, #e6e9f0);
+  border-radius: 10px;
+}
+
+.product-card {
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.input-block {
+  display: flex;
+  flex-direction: column;
+  width: 120px;
+}
+
+.btn-gradient {
+  background: linear-gradient(90deg, #4CAF50, #2ecc71);
+  border: none;
+  color: white;
+  font-weight: bold;
+  padding: 6px 16px;
+  border-radius: 6px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-gradient:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.products-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.product-item {
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  padding: 10px;
+}
+
+.product-item:hover {
+  transform: translateY(-5px);
+}
+
+.product-item h3 {
+  font-weight: 600;
+  color: #333;
+}
+
+.product-item button {
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+.product-header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+}
+
+.product-name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.product-price {
+  color: green;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.products-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
+
+
+/* Animaciones para React Transition Group */
+.fade-enter {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+.fade-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 400ms, transform 400ms;
+}
+.fade-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-exit-active {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 400ms, transform 400ms;
+}
