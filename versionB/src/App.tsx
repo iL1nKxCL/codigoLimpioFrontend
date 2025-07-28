@@ -13,4 +13,6 @@ const App: React.FC = () => (
   </Layout>
 );
 
+const prueba = 123;
+
 export default App;
