@@ -5,50 +5,102 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Versión A - Proyecto Frontend</title>
   <style>
-    .container { padding: 20px; font-family: Arial; }
-    .card { border: 1px solid #ccc; padding: 10px; margin: 10px; }
-    .btn { background-color: blue; color: white; padding: 5px 10px; cursor: pointer; }
+    .container { padding: 10px; font-family: sans-serif; }
+    .card { border: 1px solid gray; margin: 5px; padding: 5px; }
+    .btn { background: #008; color: #fff; border: none; padding: 3px 8px; cursor: pointer; }
+    .input, .select { margin: 5px; }
+    .list { margin-top: 10px; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Aplicación Desordenada</h1>
-    <div id="productos"></div>
-    <input id="inputProducto" placeholder="Nombre del producto">
-    <button class="btn" onclick="agregarProducto()">Agregar</button>
+    <h1>Gestión de Productos (Versión A)</h1>
+    <div>
+      <input id="nombre" class="input" placeholder="Nombre producto">
+      <input id="desc" class="input" placeholder="Descripción">
+      <select id="cat" class="select">
+        <option value="otros">Otros</option>
+        <option value="ropa">Ropa</option>
+        <option value="zapatos">Zapatos</option>
+        <option value="polerones">Polerones</option>
+        <option value="frutas">Frutas</option>
+        <option value="verduras">Verduras</option>
+        <option value="tecnologia">Tecnología</option>
+      </select>
+      <input id="stock" class="input" type="number" placeholder="Stock">
+      <input id="precio" class="input" type="number" placeholder="Precio">
+      <button onclick="agregar()" class="btn">Agregar</button>
+    </div>
+    <div>
+      <input id="busqueda" placeholder="Buscar...">
+      <select id="ordenar" onchange="mostrar()">
+        <option value="">Sin orden</option>
+        <option value="precioAsc">Precio ↑</option>
+        <option value="precioDesc">Precio ↓</option>
+        <option value="nombre">Nombre (A-Z)</option>
+        <option value="categoria">Categoría (A-Z)</option>
+      </select>
+    </div>
+    <div id="productos" class="list"></div>
   </div>
   <script>
-    const STORAGE_KEY = "productos_versionA";
-    let productos = JSON.parse(localStorage.getItem(STORAGE_KEY)) || ['Zapatos', 'Polera', 'Pantalones'];
+    let productos = JSON.parse(localStorage.getItem("prodA")) || [];
+    let idxEditar = -1;
 
     function guardar() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(productos));
+      localStorage.setItem("prodA", JSON.stringify(productos));
+    }
+
+    function agregar() {
+      const n = document.getElementById("nombre").value;
+      const d = document.getElementById("desc").value;
+      const c = document.getElementById("cat").value;
+      const s = +document.getElementById("stock").value;
+      const p = +document.getElementById("precio").value;
+      if (!n || !d || p <= 0) { alert("Completa todo!"); return; }
+      if (idxEditar >= 0) { productos[idxEditar] = {n,d,c,s,p}; idxEditar=-1; }
+      else productos.push({n,d,c,s,p});
+      guardar(); mostrar();
+    }
+
+    function eliminar(i) {
+      productos.splice(i,1);
+      guardar(); mostrar();
+    }
+
+    function editar(i) {
+      const pr = productos[i];
+      document.getElementById("nombre").value = pr.n;
+      document.getElementById("desc").value = pr.d;
+      document.getElementById("cat").value = pr.c;
+      document.getElementById("stock").value = pr.s;
+      document.getElementById("precio").value = pr.p;
+      idxEditar = i;
     }
 
     function mostrar() {
       const div = document.getElementById("productos");
       div.innerHTML = "";
-      productos.forEach((prod, i) => {
-        div.innerHTML += "<div class='card'>" + prod +
-          "<button onclick='eliminarProducto(" + i + ")'>Eliminar</button></div>";
+      const orden = document.getElementById("ordenar").value;
+      let lista = [...productos];
+      if (orden=="precioAsc") lista.sort((a,b)=>a.p-b.p);
+      if (orden=="precioDesc") lista.sort((a,b)=>b.p-a.p);
+      if (orden=="nombre") lista.sort((a,b)=>a.n.localeCompare(b.n));
+      if (orden=="categoria") lista.sort((a,b)=>a.c.localeCompare(b.c));
+      const filtro = document.getElementById("busqueda").value.toLowerCase();
+      lista.filter(pr=>`${pr.n} ${pr.c} ${pr.d}`.toLowerCase().includes(filtro))
+           .forEach((pr,i)=>{
+        div.innerHTML += `
+          <div class='card'>
+            <b>${pr.n}</b> - $${pr.p}<br>
+            <small>${pr.d} | Stock: ${pr.s} | Cat: ${pr.c}</small><br>
+            <button onclick="editar(${i})">Editar</button>
+            <button onclick="eliminar(${i})">Eliminar</button>
+          </div>`;
       });
     }
 
-    function agregarProducto() {
-      const valor = document.getElementById("inputProducto").value;
-      if (valor !== "") {
-        productos.push(valor);
-        guardar();
-        mostrar();
-      }
-    }
-
-    function eliminarProducto(index) {
-      productos.splice(index, 1);
-      guardar();
-      mostrar();
-    }
-
+    document.getElementById("busqueda").addEventListener("input", mostrar);
     mostrar();
   </script>
 </body>
