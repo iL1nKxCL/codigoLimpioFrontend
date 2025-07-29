@@ -1,3 +1,6 @@
+Autor: Lian Venegas
+Fecha aprox: Agosto/2025
+
 # Proyecto: Código Limpio Frontend
 
 Este proyecto incluye dos versiones para demostrar buenas prácticas en el desarrollo frontend:
@@ -111,6 +114,3 @@ proyecto-mejora-frontend/
 - **Corregir con ESLint:** `npm run lint:fix`
 
 ---
-
-**Autor:** Lian Venegas  
-**Fecha:** 2025
