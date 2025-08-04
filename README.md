@@ -134,19 +134,9 @@ Se incorporan:
 
 ---
 
-## 💡 Recomendaciones Finales
-
-- Integrar validaciones automáticas en CI (GitHub Actions, Husky)
-- Continuar auditorías periódicas de accesibilidad
-- Capacitar al equipo en principios SOLID y modularización
-- Versionar cambios con control semántico (Conv. Commits)
-
----
-
 ## 🧾 Créditos y Autoría
 
 Desarrollado como parte del proyecto de investigación académica  
-**“Aplicación de Buenas Prácticas en Desarrollo Frontend”**  
-Facultad de Ingeniería, 2025
-
+**“Codigo Limpio FrontEnd”**  
+**Autor:** Lian Venegas 
 ---
