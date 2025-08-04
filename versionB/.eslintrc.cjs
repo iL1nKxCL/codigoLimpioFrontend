@@ -22,7 +22,12 @@ module.exports = {
   ],
   rules: {
     "react/react-in-jsx-scope": "off",
-    "@typescript-eslint/no-unused-vars": ["warn"],
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "@typescript-eslint/no-unused-vars": ["error"],
+    "eqeqeq": ["error", "always"],
+    "curly": ["error", "all"],
+    "no-empty-function": "error",
+    "no-var": "error",
+    "prefer-const": "error"
   },
 };

@@ -5,6 +5,9 @@ import ProductList from "./components/ProductList";
 import EvaluacionSistema from "./EvaluacionSistema";
 import { Layout, Menu } from "antd";
 
+// ⚠️ Esta línea está para generar error ESLint 
+const A = "⚠️ El Código Está Sin errores. Bueno, exceptuando este..."; 
+
 const { Header, Content } = Layout;
 
 const App = () => {
@@ -18,8 +21,10 @@ const App = () => {
             <Menu.Item key="1">
               <Link to="/">Productos</Link>
             </Menu.Item>
-            <Menu.Item key="2">
-              <Link to="/evaluacion-sistema">Evaluación del Sistema</Link>
+            <Menu.Item key="2" aria-labelledby="evaluacion-id">
+              <span id="evaluacion-id">
+                <Link to="/evaluacion-sistema">Evaluación del Sistema</Link>
+              </span>
             </Menu.Item>
           </Menu>
         </Header>
@@ -33,5 +38,7 @@ const App = () => {
     </Router>
   );
 };
+
+
 
 export default App;
