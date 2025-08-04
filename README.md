@@ -19,7 +19,7 @@ Este proyecto implementa una propuesta de mejora basada en el uso de buenas prá
 ## 🧩 Contenido del Proyecto
 
 ```
-proyecto-mejora-frontend/
+codigoLimpioFrontend/
 ├── versionA/                 # HTML + JS sin estructura ni tipado
 │   └── index.html
 └── versionB/                 # Proyecto optimizado con buenas prácticas
@@ -58,7 +58,7 @@ git --version
 ### 1. Clonar el repositorio
 ```bash
 git clone https://github.com/tuusuario/proyecto-mejora-frontend.git
-cd proyecto-mejora-frontend/versionB
+cd codigoLimpioFrontend/versionB
 ```
 
 ### 2. Instalar dependencias
