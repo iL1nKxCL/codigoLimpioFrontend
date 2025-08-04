@@ -1,18 +1,37 @@
+// src/App.tsx
 import React from "react";
-import { Layout } from "antd";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import ProductList from "./components/ProductList";
+import EvaluacionSistema from "./EvaluacionSistema";
+import { Layout, Menu } from "antd";
 
 const { Header, Content } = Layout;
 
-const App: React.FC = () => (
-  <Layout style={{ minHeight: "100vh" }}>
-    <Header style={{ color: "#fff", fontSize: "20px" }}>Version B Codigo Limpio FrontEnd</Header>
-    <Content style={{ padding: "20px" }}>
-      <ProductList />
-    </Content>
-  </Layout>
-);
+const App = () => {
+  console.log("📦 App renderizado");
 
-const prueba = 123;
+  return (
+    <Router>
+      <Layout>
+        <Header>
+          <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["1"]}>
+            <Menu.Item key="1">
+              <Link to="/">Productos</Link>
+            </Menu.Item>
+            <Menu.Item key="2">
+              <Link to="/evaluacion-sistema">Evaluación del Sistema</Link>
+            </Menu.Item>
+          </Menu>
+        </Header>
+        <Content style={{ padding: "20px" }}>
+          <Routes>
+            <Route path="/" element={<ProductList />} />
+            <Route path="/evaluacion-sistema" element={<EvaluacionSistema />} />
+          </Routes>
+        </Content>
+      </Layout>
+    </Router>
+  );
+};
 
 export default App;
