@@ -1,5 +1,16 @@
 import React, { useState } from "react";
-import { Tabs, Card, Rate, Input, Button, message, Table, InputNumber, Select, Form } from "antd";
+import {
+  Tabs,
+  Card,
+  Rate,
+  Input,
+  Button,
+  message,
+  Table,
+  InputNumber,
+  Select,
+  Form,
+} from "antd";
 import jsPDF from "jspdf";
 
 const { TabPane } = Tabs;
@@ -21,36 +32,91 @@ const EvaluacionSistema = () => {
     const updated = [...data];
     updated[index][key] = value;
     setData(updated);
-    console.log(`📈 Cambió ${key} de ${updated[index].metric} a`, value);
   };
 
-  const handleGeneratePDF = (values: any) => {
-    const doc = new jsPDF();
-    doc.setFontSize(12);
-    doc.text(`Evaluación del Sistema`, 10, 10);
-    doc.text(`Evaluador: ${values.nombre}`, 10, 18);
-    doc.text(`Rol: ${values.rol}`, 10, 26);
-    doc.text(`Experiencia previa: ${values.experiencia}`, 10, 34);
+const handleGeneratePDF = (values: any) => {
+  const doc = new jsPDF();
 
-    doc.text("\n📊 Comparación técnica:", 10, 44);
-    data.forEach((item, idx) => {
-      const line = `${item.metric}: A=${item.versionA}, B=${item.versionB}`;
-      doc.text(line, 10, 54 + idx * 10);
-    });
+  // 🔷 Título principal
+  doc.setTextColor(40, 40, 180); // Azul
+  doc.setFontSize(22);
+  doc.setFont("helvetica", "bold");
+  doc.text("Evaluación Código Limpio Frontend", 105, 20, { align: "center" });
 
-    const offset = 54 + data.length * 10 + 10;
-    doc.text("\n📋 Evaluación de percepción:", 10, offset);
-    doc.text(`Claridad de la interfaz: ${values.claridadInterfaz}/5`, 10, offset + 10);
-    doc.text(`Calidad del código: ${values.calidadCodigo}/5`, 10, offset + 20);
-    doc.text(`Accesibilidad visual: ${values.accesibilidad}/5`, 10, offset + 30);
-    doc.text(`Rendimiento general: ${values.rendimiento}/5`, 10, offset + 40);
-    doc.text(`Facilidad de uso: ${values.usabilidad}/5`, 10, offset + 50);
-    doc.text(`Satisfacción general: ${values.satisfaccion}/5`, 10, offset + 60);
-    doc.text("Comentarios adicionales:", 10, offset + 70);
-    doc.text(doc.splitTextToSize(values.comentarios, 180), 10, offset + 80);
+  // 🔧 Información personal
+  doc.setTextColor(0, 0, 0); // Negro
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "normal");
+  doc.text(`Evaluador: ${values.nombre}`, 20, 35);
+  doc.text(`Rol: ${values.rol}`, 20, 42);
+  doc.text(`Experiencia previa: ${values.experiencia || "No indicada"}`, 20, 49);
 
-    doc.save(`evaluacion_${values.nombre.replace(/\s+/g, '_')}.pdf`);
-    message.success("📥 PDF generado correctamente");
+  // 🧱 Línea divisoria
+  doc.setDrawColor(160, 160, 160);
+  doc.setLineWidth(0.5);
+  doc.line(20, 55, 190, 55);
+
+  // 📊 Comparación técnica
+  doc.setTextColor(0, 140, 0); // Verde oscuro
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
+  doc.text("Comparación técnica", 20, 65);
+
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(12);
+  data.forEach((item, idx) => {
+    const line = `${item.metric}: A=${item.versionA}, B=${item.versionB}`;
+    doc.text(line, 25, 75 + idx * 8);
+  });
+
+  const offset = 75 + data.length * 8 + 10;
+
+  doc.line(20, offset, 190, offset);
+
+  // ⭐ Evaluación de percepción
+  doc.setTextColor(180, 80, 30); // Rojo suave
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
+  doc.text("Evaluación de percepción", 20, offset + 10);
+
+  const perceptionMetrics = [
+    ["Claridad de la interfaz", values.claridadInterfaz],
+    ["Calidad del código", values.calidadCodigo],
+    ["Accesibilidad visual", values.accesibilidad],
+    ["Rendimiento general", values.rendimiento],
+    ["Facilidad de uso", values.usabilidad],
+    ["Satisfacción general", values.satisfaccion],
+  ];
+
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(12);
+  perceptionMetrics.forEach((metric, i) => {
+    doc.text(`${metric[0]}: ${metric[1] || 0}/5`, 25, offset + 20 + i * 8);
+  });
+
+  // 📝 Comentarios
+  doc.text("Comentarios adicionales:", 25, offset + 75);
+  doc.setFont("helvetica", "italic");
+  doc.text(
+    doc.splitTextToSize(values.comentarios || "Sin comentarios", 160),
+    25,
+    offset + 83
+  );
+
+  // 📥 Guardar
+  doc.save(`evaluacion_codigolimpio_${values.nombre.replace(/\s+/g, "_")}.pdf`);
+  message.success("🎉 PDF estilizado generado correctamente");
+
+  };
+
+  // Validación manual
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      handleGeneratePDF(values);
+    } catch (error) {
+      message.error("❌ Completa los campos requeridos correctamente.");
+    }
   };
 
   const columns = [
@@ -89,19 +155,54 @@ const EvaluacionSistema = () => {
         </TabPane>
 
         <TabPane tab="Encuesta Detallada" key="2">
-          <Form form={form} layout="vertical" onFinish={handleGeneratePDF}>
-            <Form.Item label="Nombre del evaluador" name="nombre" rules={[{ required: true }]}> <Input /> </Form.Item>
-            <Form.Item label="Rol del evaluador" name="rol" rules={[{ required: true }]}> <Select><Option value="Desarrollador">Desarrollador</Option><Option value="Tester">Tester</Option><Option value="Estudiante">Estudiante</Option><Option value="Usuario final">Usuario final</Option></Select> </Form.Item>
-            <Form.Item label="Experiencia previa en sistemas similares" name="experiencia"> <Input /> </Form.Item>
-            <Form.Item label="Claridad de la interfaz" name="claridadInterfaz"> <Rate /> </Form.Item>
-            <Form.Item label="Calidad del código (percibida)" name="calidadCodigo"> <Rate /> </Form.Item>
-            <Form.Item label="Accesibilidad visual y navegación" name="accesibilidad"> <Rate /> </Form.Item>
-            <Form.Item label="Rendimiento general del sistema" name="rendimiento"> <Rate /> </Form.Item>
-            <Form.Item label="Facilidad de uso" name="usabilidad"> <Rate /> </Form.Item>
-            <Form.Item label="Satisfacción general con la aplicación" name="satisfaccion"> <Rate /> </Form.Item>
-            <Form.Item label="Comentarios adicionales" name="comentarios"> <TextArea rows={4} /> </Form.Item>
+          <Form form={form} layout="vertical">
+            <Form.Item
+              label="* Nombre del evaluador"
+              name="nombre"
+              rules={[{ required: true, message: "'nombre' es requerido." }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="* Rol del evaluador"
+              name="rol"
+              rules={[{ required: true, message: "'rol' es requerido." }]}
+            >
+              <Select>
+                <Option value="Desarrollador">Desarrollador</Option>
+                <Option value="Tester">Tester</Option>
+                <Option value="Estudiante">Estudiante</Option>
+                <Option value="Usuario final">Usuario final</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item label="Experiencia previa en sistemas similares" name="experiencia">
+              <Input />
+            </Form.Item>
+            <Form.Item label="Claridad de la interfaz" name="claridadInterfaz">
+              <Rate />
+            </Form.Item>
+            <Form.Item label="Calidad del código (percibida)" name="calidadCodigo">
+              <Rate />
+            </Form.Item>
+            <Form.Item label="Accesibilidad visual y navegación" name="accesibilidad">
+              <Rate />
+            </Form.Item>
+            <Form.Item label="Rendimiento general del sistema" name="rendimiento">
+              <Rate />
+            </Form.Item>
+            <Form.Item label="Facilidad de uso" name="usabilidad">
+              <Rate />
+            </Form.Item>
+            <Form.Item label="Satisfacción general con la aplicación" name="satisfaccion">
+              <Rate />
+            </Form.Item>
+            <Form.Item label="Comentarios adicionales" name="comentarios">
+              <TextArea rows={4} />
+            </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit">Descargar Informe Detallado en PDF</Button>
+              <Button type="primary" onClick={handleSubmit}>
+                Descargar Informe Detallado en PDF
+              </Button>
             </Form.Item>
           </Form>
         </TabPane>
